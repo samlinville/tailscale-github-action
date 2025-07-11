@@ -1,4 +1,8 @@
-name: tailscale
+name: tailscale-oidc
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 on:
   workflow_dispatch:
@@ -23,9 +27,10 @@ jobs:
       - name: Tailscale Action
         uses: ./
         with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          oidc-client-id: ${{ secrets.TS_OIDC_CLIENT_ID }}
+          oidc-aud-claim: ${{ secrets.TS_OIDC_AUD_CLAIM }}
           tags: tag:ci
+          tailnet: ${{ secrets.TS_TAILNET_NAME }}
           use-cache: ${{ matrix.cache }}
 
       - name: check for tailscale connection
